@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Flour to Door</title>
+
+<style>
+ body {
+
+    font-family: 'Montserrat', 'open sans';
+    margin: 0;
+    background: #f8f9fa;
+    font-size: 18px;
+}
+
+/* HEADER */
+header {
+    background: url("farm.jpg") no-repeat center center/cover;
+    height: 300px;
+    color: white;
+    text-align: center;
+}
+
+.overlay {
+    background: rgba(0,0,0,0.5);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+header h1 {
+    font-size: 60px;
+}
+
+/* NAV */
+nav {
+    background: black;
+    padding: 15px;
+    text-align: center;
+}
+nav a {
+    color: white;
+    margin: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* SECTION */
+section {
+    padding: 40px;
+    margin: 30px;
+    background: white;
+    border-radius: 12px;
+}
+
+/* CARDS */
+.cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 200px;
+    text-align: center;
+    padding: 15px;
+    background: #eef2f7;
+    cursor: pointer;
+    position: relative;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* TICK */
+.tick {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: green;
+    color: white;
+    border-radius: 50%;
+    padding: 5px;
+    display: none;
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+}
+
+/* BUTTON */
+button {
+    padding: 12px;
+    background: black;
+    color: white;
+    border: none;
+    width: 100%;
+}
+
+/* SUMMARY */
+.summary {
+    background: #e9f1ff;
+    padding: 20px;
+    margin-top: 15px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+<div class="overlay">
+<h1>🌾 FLOUR TO DOOR 🌾</h1>
+<p>Pure • Safe • Direct from Farmers</p>
+</div>
+</header>
+
+<nav>
+<a href="#about">About</a>
+<a href="#products">Products</a>
+<a href="#order">Order</a>
+<a href="#track">Track</a>
+<a href="#help">Help</a>
+</nav>
+
+<section id="about">
+<h2>About Our Service</h2>
+<p>We deliver fresh flour directly from farmers.</p>
+ <p> At Flour to Door, we believe in delivering purity from farms directly to your home. Our wheat is cultivated using safe and natural farming methods without excessive chemicals. </p> 
+ <p> From soil preparation to harvesting, we maintain strict quality control. Our farmers follow organic and hygienic practices to preserve nutrients and ensure healthy consumption. </p> 
+ <p> We eliminate middlemen and brokerage costs, so you get the best quality at the right price. Your money directly supports farmers, and you receive fresh, clean, and safe flour. </p> 
+ <p> ✔ Organic farming practices<br>
+     ✔ No harmful chemicals<br> ✔ Direct farm-to-home delivery<br> ✔ Fair pricing without middlemen </p> 
+
+</section>
+
+<section id="products">
+<h2>Select Wheat Type</h2>
+
+<div class="cards">
+
+<div class="card" onclick="toggleSelect(this,'Sharbati')">
+<div class="tick">✔</div>
+<img src="sharbati.jpg">
+<p>Sharbati</p>
+</div>
+
+<div class="card" onclick="toggleSelect(this,'Lokwan')">
+<div class="tick">✔</div>
+<img src="lokwan.jpg">
+<p>Lokwan</p>
+</div>
+
+
+<div class="card" onclick="toggleSelect(this,'Durum')">
+<div class="tick">✔</div>
+<img src="durum.jpg">
+<p>Durum</p>
+</div>
+
+<div class="card" onclick="toggleSelect(this,'Organic')">
+<div class="tick">✔</div>
+<img src="organic.jpg">
+<p>Organic</p>
+</div>
+
+</div>
+
+<p id="selectedList"></p>
+</section>
+
+<section id="order">
+<h2>Order Details</h2>
+
+<div id="dynamicInputs"></div>
+
+<input type="text" id="name" placeholder="Full Name">
+<input type="text" id="house" placeholder="House / Flat No">
+<input type="text" id="area" placeholder="Area">
+<input type="text" id="city" placeholder="City">
+<input type="text" id="pincode" placeholder="Pincode">
+
+<button onclick="placeOrder()">Place Order</button>
+
+<div id="summary" class="summary"></div>
+</section>
+
+<section id="track">
+<h2>Track Your Order</h2>
+
+<input type="text" id="trackId" placeholder="Enter Order ID">
+<button onclick="trackOrder()">Track</button>
+
+<div id="trackingStatus"></div>
+</section>
+
+<section id="help">
+<h2>Help Center</h2>
+<p>Contact support anytime.</p>
+      <p> If you have any questions, issues, or feedback, feel free to contact us. We are always here to help you and ensure a smooth experience. </p>
+       <h3>📧 Email Support</h3>
+        <p>support@flourtodoor.com</p>
+         <h3>📞 Contact Number</h3> 
+         <p>+91 9876543210</p> <h3>🌐 Follow Us</h3>
+          <p> 📸 Instagram: @flourtodoor<br> 📘 Facebook: Flour to Door Official<br> 
+        </p> 
+    </section>
+
+<script>
+
+
+let selectedItems = [];
+let generatedID = "";
+
+/* ✅ ONLY FIXED PART (WHEAT MULTI SELECT) */
+function toggleSelect(card, type) {
+
+    let tick = card.querySelector(".tick");
+
+    let index = selectedItems.indexOf(type);
+
+    if (index !== -1) {
+        selectedItems.splice(index, 1);
+        tick.style.display = "none";
+    } else {
+        selectedItems.push(type);
+        tick.style.display = "block";
+    }
+
+    document.getElementById("selectedList").innerText =
+    "Selected: " + selectedItems.join(", ");
+
+    generateInputs();
+}
+
+/* NO CHANGES BELOW */
+function generateInputs() {
+    let container = document.getElementById("dynamicInputs");
+    container.innerHTML = "";
+
+    selectedItems.forEach(item => {
+        container.innerHTML +=
+        "<label>" + item + " (KG)</label>" +
+        "<input type='number' id='" + item + "'>" +
+
+        "<label>Flour Type</label>" +
+        "<select id='" + item + "_type'>" +
+        "<option value='' selected>Select Type</option>" +
+        "<option>Fine</option>" +
+        "<option>Medium</option>" +
+        "<option>Coarse</option>" +
+        "</select><br><br>";
+    });
+}
+
+function placeOrder() {
+
+fetch("http://localhost:5000/order", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        name: document.getElementById("name").value,
+        items: selectedItems
+    })
+})
+.then(res => res.json())
+.then(data => {
+    console.log("Server Response:", data);
+});
+
+{
+
+    let name = document.getElementById("name").value;
+
+    if (selectedItems.length === 0 || name === "") {
+        alert("Fill all details!");
+        return;
+    }
+
+    let now = new Date();
+    let orderDate = now.toLocaleDateString();
+    let orderTime = now.toLocaleTimeString();
+
+    let deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + 2);
+
+    let total = 0;
+    let summaryText = "";
+
+    selectedItems.forEach(item => {
+
+        let qty = document.getElementById(item).value;
+        let type = document.getElementById(item + "_type").value;
+
+        let pricePerKg = 30;
+
+        if (item === "Sharbati") pricePerKg = 35;
+        if (item === "Lokwan") pricePerKg = 30;
+        if (item === "Bansi") pricePerKg = 32;
+        if (item === "Durum") pricePerKg = 40;
+        if (item === "Organic") pricePerKg = 50;
+
+        let price = qty * pricePerKg;
+        total += price;
+
+        summaryText += item + " (" + type + ") - " + qty + " KG = ₹" + price + "<br>";
+    });
+
+    generatedID = "ORD" + Math.floor(Math.random() * 10000);
+
+    document.getElementById("summary").innerHTML =
+    "<h2>🧾 ORDER RECEIPT</h2>" +
+    "<b>Order ID:</b> " + generatedID + "<br>" +
+    summaryText +
+    "<hr><h3>Total: ₹" + total + "</h3>";
+}
+}
+
+function trackOrder() {
+    let input = document.getElementById("trackId").value;
+
+    if (input === generatedID) {
+        document.getElementById("trackingStatus").innerHTML =
+        "✔ Order Placed<br>✔ Processing<br>⏳ Out for Delivery<br>⬜ Delivered";
+    } else {
+        document.getElementById("trackingStatus").innerHTML =
+        "❌ Invalid Order ID";
+    }
+}
+
+</script>
+
+</body>
+</html>
